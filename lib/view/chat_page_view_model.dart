@@ -35,8 +35,7 @@ class ChatPageViewModel extends StateNotifier<ChatPageState>{
 
     int index = state.messages.length;
     stream.listen(
-      (v) {
-        var delta = v.choices.first.delta;
+      (delta) {
         state = state.concatMessageAt(
           index,
           CompletionMessage(

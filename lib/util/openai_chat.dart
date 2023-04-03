@@ -45,7 +45,7 @@ class OpenAiChat extends StateNotifier<OpenAiChatState>{
     return resMessage;
   }
 
-  Stream<OpenAIStreamChatCompletionModel> createCompletionStream(
+  Stream<OpenAIStreamChatCompletionChoiceDeltaModel> createCompletionStream(
     List<OpenAIChatCompletionChoiceMessageModel> messages
   ){
     messages.insert(
@@ -63,8 +63,8 @@ class OpenAiChat extends StateNotifier<OpenAiChatState>{
       // maxTokens: state.maxTokens,
     );
 
-    // return stream.map((event) => event.choices.first.delta);
-    return stream.where((event) => event.choices.first.delta.content != null);
+    return stream.map((event) => event.choices.first.delta);
+    // return stream.where((event) => event.choices.first.delta.content != null);
   }
 }
 
