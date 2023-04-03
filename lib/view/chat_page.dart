@@ -88,6 +88,7 @@ class ChatPage extends HookConsumerWidget{
             ),
             const SizedBox(height: 4),
             MarkdownBody(
+              styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(textScaleFactor: 1.1),
               data: message.content,
               selectable: true,
             ),
