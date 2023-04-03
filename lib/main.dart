@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gpt/color_shemes.dart';
 import 'package:flutter_gpt/view/chat_page.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -19,9 +20,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      themeMode: ThemeMode.light,
       theme: ThemeData(
         useMaterial3: true,
-        colorSchemeSeed: Colors.lightGreen,
+        colorScheme: lightColorScheme
+      ),
+      darkTheme: ThemeData(
+        useMaterial3: true,
+        colorScheme: darkColorScheme,
       ),
       debugShowCheckedModeBanner: false,
       home: const ChatPage(),
