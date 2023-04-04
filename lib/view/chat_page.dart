@@ -82,18 +82,9 @@ class ChatPage extends HookConsumerWidget{
 
   Widget _buildListItem(BuildContext context, WidgetRef ref, CompletionMessage message){
     return Card(
-      elevation: message.role == "assistant" ? 0 : null,
-      shape: message.role == "assistant" 
-        ? RoundedRectangleBorder(
-          side: BorderSide(
-            color: Theme.of(context).colorScheme.outline,
-          ),
-          borderRadius: const BorderRadius.all(Radius.circular(12)),
-        )
-        : null,
       color: message.role == "assistant"
-          ? Theme.of(context).colorScheme.background
-          : Theme.of(context).colorScheme.surface,
+          ? Theme.of(context).colorScheme.surface
+          : Theme.of(context).colorScheme.tertiaryContainer,
       margin: const EdgeInsets.all(8),
       semanticContainer: false,
       child: Container(
@@ -114,7 +105,7 @@ class ChatPage extends HookConsumerWidget{
               shrinkWrap: true,
               data: message.content,
               config: ref.watch(themeMode) == ThemeMode.dark
-                  ? MarkdownConfig.darkConfig 
+                  ? MarkdownConfig.darkConfig
                   : MarkdownConfig.defaultConfig,
             )
           ]
