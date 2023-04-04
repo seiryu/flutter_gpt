@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gpt/util/shared_preferences.dart';
-import 'package:flutter_gpt/util/theme_mode.dart';
 import 'package:flutter_gpt/view/chat_page_view_model.dart';
 import 'package:flutter_gpt/view/openai_apikey_dialog.dart';
 import 'package:flutter_gpt/view/settings_page.dart';
@@ -37,9 +36,14 @@ class ChatPage extends HookConsumerWidget{
       title: const Text("Flutter GPT"),
       actions: [
         IconButton(
-          onPressed: () => ref.watch(themeMode.notifier).toggle(), 
+          onPressed: (){
+            final current = ref.watch(sharedPrefsRepo).themeMode;
+            ref.watch(sharedPrefsRepo.notifier).setConfig(
+              themeMode: current == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark
+            );
+          },
           icon: Icon(
-            ref.watch(themeMode) == ThemeMode.dark
+            ref.watch(sharedPrefsRepo).themeMode == ThemeMode.dark
               ? Icons.light_mode
               : Icons.dark_mode
           ),
@@ -107,7 +111,7 @@ class ChatPage extends HookConsumerWidget{
               padding: const EdgeInsets.all(0),
               shrinkWrap: true,
               data: message.content,
-              config: ref.watch(themeMode) == ThemeMode.dark
+              config: ref.watch(sharedPrefsRepo).themeMode == ThemeMode.dark
                   ? MarkdownConfig.darkConfig
                   : MarkdownConfig.defaultConfig,
             )

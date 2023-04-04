@@ -20,7 +20,7 @@ class OpenAiApiKeyDialog extends HookConsumerWidget{
       actions: [
         TextButton(
           onPressed: () {
-            ref.read(sharedPrefsRepo).setConfig(apiKey: controller.text).then(
+            ref.read(sharedPrefsRepo.notifier).setConfig(openAiApiKey: controller.text).then(
               (_) => Navigator.of(context).pop()
             );
           }, 
