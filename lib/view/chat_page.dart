@@ -67,7 +67,7 @@ class ChatPage extends HookConsumerWidget{
         shrinkWrap: true,
         children: [
           for(var message in ref.watch(vm).messages) ...{
-             _buildListItem(context, message)
+             _buildListItem(context, ref, message)
           },
           if( ref.watch(vm).isStreaming )
             Container(
@@ -80,7 +80,7 @@ class ChatPage extends HookConsumerWidget{
     );
   }
 
-  Widget _buildListItem(BuildContext context, CompletionMessage message){
+  Widget _buildListItem(BuildContext context, WidgetRef ref, CompletionMessage message){
     return Card(
       elevation: message.role == "assistant" ? 0 : null,
       shape: message.role == "assistant" 
@@ -113,6 +113,9 @@ class ChatPage extends HookConsumerWidget{
               padding: const EdgeInsets.all(0),
               shrinkWrap: true,
               data: message.content,
+              config: ref.watch(themeMode) == ThemeMode.dark
+                  ? MarkdownConfig.darkConfig 
+                  : MarkdownConfig.defaultConfig,
             )
           ]
         ),
