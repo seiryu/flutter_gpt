@@ -4,7 +4,7 @@ import 'package:flutter_gpt/util/theme_mode.dart';
 import 'package:flutter_gpt/view/chat_page_view_model.dart';
 import 'package:flutter_gpt/view/openai_apikey_dialog.dart';
 import 'package:flutter_gpt/view/settings_page.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:markdown_widget/markdown_widget.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 
@@ -91,6 +91,9 @@ class ChatPage extends HookConsumerWidget{
           borderRadius: const BorderRadius.all(Radius.circular(12)),
         )
         : null,
+      color: message.role == "assistant"
+          ? Theme.of(context).colorScheme.background
+          : Theme.of(context).colorScheme.surface,
       margin: const EdgeInsets.all(8),
       semanticContainer: false,
       child: Container(
@@ -98,16 +101,19 @@ class ChatPage extends HookConsumerWidget{
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SelectableText(
-              message.role,
-              style: Theme.of(context).textTheme.titleMedium,
+            Padding(
+              padding: const EdgeInsets.all(4),
+              child: SelectableText(
+                message.role,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
             ),
-            const SizedBox(height: 8),
-            MarkdownBody(
-              styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(textScaleFactor: 1.1),
+            const SizedBox(height: 4),
+            MarkdownWidget(
+              padding: const EdgeInsets.all(0),
+              shrinkWrap: true,
               data: message.content,
-              selectable: true,
-            ),
+            )
           ]
         ),
       ),
@@ -125,23 +131,27 @@ class ChatPage extends HookConsumerWidget{
 
     return Container(
       padding: const EdgeInsets.all(16),
-      child: TextFormField(
-        maxLines: 8,
-        minLines: 1,
-        autofocus: true,
-        textInputAction: TextInputAction.newline,
-        keyboardType: TextInputType.multiline,
-        controller: ref.watch(vm.notifier).textController,
-        onFieldSubmitted: (_) => onSubmit(),
-        decoration: InputDecoration(
-          hintText: "Ask me anything",
-          border: const OutlineInputBorder(),
-          suffix: IconButton(
-            onPressed: () => onSubmit(),
-            icon: const Icon(Icons.send),
+      child: Material(
+        type: MaterialType.card,
+        elevation: 1,
+        child: TextFormField(
+          maxLines: 8,
+          minLines: 1,
+          autofocus: true,
+          textInputAction: TextInputAction.newline,
+          keyboardType: TextInputType.multiline,
+          controller: ref.watch(vm.notifier).textController,
+          onFieldSubmitted: (_) => onSubmit(),
+          decoration: InputDecoration(
+            hintText: "Ask me anything",
+            border: const OutlineInputBorder(),
+            suffix: IconButton(
+              onPressed: () => onSubmit(),
+              icon: const Icon(Icons.send),
+            ),
           ),
         ),
-      ),
+      )
     );
   }
 }
