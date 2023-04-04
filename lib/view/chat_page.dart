@@ -141,13 +141,16 @@ class ChatPage extends HookConsumerWidget{
           onFieldSubmitted: (_) => onSubmit(),
           decoration: InputDecoration(
             enabled: !ref.watch(vm).isStreaming,
-            hintText: "Ask me anything",
+            hintText: "Ask me anything ...",
             border: const OutlineInputBorder(),
-            suffix: IconButton(
-              onPressed: () => onSubmit(),
-              icon: const Icon(Icons.send),
+            suffixIcon: Container(
+              padding: const EdgeInsets.only(right: 8),
+              child: IconButton(
+                onPressed: () => onSubmit(),
+                icon: const Icon(Icons.send),
+              ),
             ),
-            contentPadding: const EdgeInsets.fromLTRB(16, 8, 16, 16)
+            contentPadding: const EdgeInsets.all(12)
           ),
         ),
       )
