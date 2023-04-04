@@ -15,15 +15,19 @@ class ChatPage extends HookConsumerWidget{
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      appBar: _buildAppBar(context, ref),
-      body: Column(
-        children: [
-          Expanded(
-            child: _buildList(context, ref),
-          ),
-          _buildTextField(context, ref),
-        ],
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      behavior: HitTestBehavior.opaque, // これを追加！！！
+      child: Scaffold(
+        appBar: _buildAppBar(context, ref),
+        body: Column(
+          children: [
+            Expanded(
+              child: _buildList(context, ref),
+            ),
+            _buildTextField(context, ref),
+          ],
+        ),
       ),
     );
   }
@@ -63,8 +67,7 @@ class ChatPage extends HookConsumerWidget{
     return SingleChildScrollView(
       reverse: true,
       padding: const EdgeInsets.all(8),
-      child: ListView(
-        shrinkWrap: true,
+      child: Column(
         children: [
           for(var message in ref.watch(vm).messages) ...{
              _buildListItem(context, ref, message)
@@ -137,12 +140,14 @@ class ChatPage extends HookConsumerWidget{
           controller: ref.watch(vm.notifier).textController,
           onFieldSubmitted: (_) => onSubmit(),
           decoration: InputDecoration(
+            enabled: !ref.watch(vm).isStreaming,
             hintText: "Ask me anything",
             border: const OutlineInputBorder(),
             suffix: IconButton(
               onPressed: () => onSubmit(),
               icon: const Icon(Icons.send),
             ),
+            contentPadding: const EdgeInsets.fromLTRB(16, 8, 16, 16)
           ),
         ),
       )

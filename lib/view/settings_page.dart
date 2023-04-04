@@ -34,7 +34,7 @@ class SettingsPage extends HookConsumerWidget{
   Widget _buildBody(BuildContext context, WidgetRef ref){
     return Container(
       padding: const EdgeInsets.all(16),
-      child: Column(
+      child: ListView(
         children: [
           TextFormField(
             controller: ref.watch(vm.notifier).apiKeyController,
