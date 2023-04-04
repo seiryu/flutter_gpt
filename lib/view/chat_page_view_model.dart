@@ -18,13 +18,13 @@ class ChatPageViewModel extends StateNotifier<ChatPageState>{
   void onTextSent(){
     if(state.isStreaming || textController.text.isEmpty) return;
 
-
+    
     state = state.addMessage(
       CompletionMessage("user", textController.text)
     );
     state = state.copyWith(isStreaming: true);
     
-    var stream = ref.watch(openAiChat.notifier).createCompletionStream(
+    var stream = ref.watch(openAiChat).createCompletionStream(
       state.messages.map(
         (e) => OpenAIChatCompletionChoiceMessageModel(
           role: e.role == "user" ? OpenAIChatMessageRole.user : OpenAIChatMessageRole.assistant, 

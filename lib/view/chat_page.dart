@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gpt/util/openai_chat.dart';
+import 'package:flutter_gpt/util/shared_preferences.dart';
 import 'package:flutter_gpt/view/chat_page_view_model.dart';
 import 'package:flutter_gpt/view/openai_apikey_dialog.dart';
 import 'package:flutter_gpt/view/settings_page.dart';
@@ -65,8 +66,8 @@ class ChatPage extends HookConsumerWidget{
 
   Widget _buildListItem(BuildContext context, CompletionMessage message){
     return Card(
-      elevation: message.role == "user" ? 0 : null,
-      shape: message.role == "user" 
+      elevation: message.role == "assistant" ? 0 : null,
+      shape: message.role == "assistant" 
         ? RoundedRectangleBorder(
           side: BorderSide(
             color: Theme.of(context).colorScheme.outline,
@@ -81,7 +82,6 @@ class ChatPage extends HookConsumerWidget{
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // SelectableText(data)
             SelectableText(
               message.role,
               style: Theme.of(context).textTheme.labelLarge,
@@ -111,10 +111,11 @@ class ChatPage extends HookConsumerWidget{
           border: const OutlineInputBorder(),
           suffixIcon: IconButton(
             onPressed: () async {
-              if( ref.watch(openAiChat).apiKey.isEmpty ){
+              if(ref.watch(sharedPrefsRepo).openAiApiKey.isEmpty){
                 await showDialog(context: context, builder: (_) => const OpenAiApiKeyDialog());
+              }else{
+                ref.watch(vm.notifier).onTextSent();
               }
-              ref.watch(vm.notifier).onTextSent();
             },
             icon: const Icon(Icons.send),
           ),

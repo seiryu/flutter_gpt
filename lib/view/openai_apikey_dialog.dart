@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gpt/util/openai_chat.dart';
+import 'package:flutter_gpt/util/shared_preferences.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class OpenAiApiKeyDialog extends HookConsumerWidget{
@@ -19,9 +19,10 @@ class OpenAiApiKeyDialog extends HookConsumerWidget{
       ),
       actions: [
         TextButton(
-          onPressed: (){
-            ref.read(openAiChat.notifier).setConfig(apiKey: controller.text);
-            Navigator.of(context).pop();
+          onPressed: () {
+            ref.read(sharedPrefsRepo).setConfig(apiKey: controller.text).then(
+              (_) => Navigator.of(context).pop()
+            );
           }, 
           child: const Text("保存")
         )

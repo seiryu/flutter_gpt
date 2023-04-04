@@ -1,100 +1,49 @@
 import 'package:dart_openai/openai.dart';
+import 'package:flutter_gpt/util/shared_preferences.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-final openAiChat = StateNotifierProvider<OpenAiChat, OpenAiChatState>( (ref) => OpenAiChat() );
+final openAiChat = Provider<OpenAiChat>( (ref) => OpenAiChat(ref) );
 
-class OpenAiChat extends StateNotifier<OpenAiChatState>{
+class OpenAiChat{
+  final ProviderRef ref;
 
-  OpenAiChat() : super( OpenAiChatState( apiKey: "" ) );
+  OpenAiChat(this.ref);
 
-  void setConfig({
-    String? apiKey,
-    double? templeture,
-    String? systemMessage,
-    int? maxTokens,
-  }){
-    state = state.copyWith(
-      apiKey: apiKey,
-      templeture: templeture,
-      systemMessage: systemMessage,
-      maxTokens: maxTokens,
-    );
-  }
-  
-
-  Future< OpenAIChatCompletionChoiceMessageModel > createCompletion(
-    List<OpenAIChatCompletionChoiceMessageModel> messages
-  ) async {
-    messages.insert(
-      0, 
-      OpenAIChatCompletionChoiceMessageModel(
-        role: OpenAIChatMessageRole.system,
-        content: state.systemMessage
-      ),
-    );
-
-    var completion = await OpenAI.instance.chat.create(
-      model: "gpt-3.5-turbo", 
-      messages: messages,
-      temperature: state.templeture,
-      maxTokens: state.maxTokens
-    );
-
-    var resMessage = completion.choices[0].message;
-
-    return resMessage;
-  }
 
   Stream<OpenAIStreamChatCompletionChoiceDeltaModel> createCompletionStream(
     List<OpenAIChatCompletionChoiceMessageModel> messages
   ){
+    final apiKey = ref.watch(sharedPrefsRepo).openAiApiKey;
+    if(apiKey.isEmpty){
+      throw const NoOpenAiApiKeyException();  
+    }
+
+    OpenAI.apiKey = apiKey;
+
     messages.insert(
       0, 
       OpenAIChatCompletionChoiceMessageModel(
         role: OpenAIChatMessageRole.system,
-        content: state.systemMessage
+        content: ref.watch(sharedPrefsRepo).systemMessage
       ),
     );
-    print(state.maxTokens);
+
     var stream = OpenAI.instance.chat.createStream(
       model: "gpt-3.5-turbo", 
       messages: messages,
-      temperature: state.templeture,
-      // maxTokens: state.maxTokens,
+      temperature: ref.watch(sharedPrefsRepo).gptTempleture,
+      maxTokens: ref.watch(sharedPrefsRepo).maxTokens,
     );
 
     return stream.map((event) => event.choices.first.delta);
-    // return stream.where((event) => event.choices.first.delta.content != null);
   }
 }
 
-class OpenAiChatState{
-  final String apiKey;
-  final double templeture;
-  final String systemMessage;
-  final int maxTokens;
+class NoOpenAiApiKeyException implements Exception{
+  final String msg = "no apikey set";
 
-  OpenAiChatState({
-    required this.apiKey,
-    this.templeture = 1.0,
-    this.systemMessage = 'You are a helpful assistant.',
-    this.maxTokens = 2048,
-  }){
-    print(apiKey);
-    OpenAI.apiKey = apiKey;
-  }
+  const NoOpenAiApiKeyException();
 
-  OpenAiChatState copyWith({
-    String? apiKey,
-    double? templeture,
-    String? systemMessage,
-    int? maxTokens,
-  }){
-    return OpenAiChatState(
-      apiKey: apiKey ?? this.apiKey,
-      templeture: templeture ?? this.templeture,
-      systemMessage: systemMessage ?? this.systemMessage,
-      maxTokens: maxTokens ?? this.maxTokens,
-    );
-  }
+  @override
+  String toString() => msg;
 }

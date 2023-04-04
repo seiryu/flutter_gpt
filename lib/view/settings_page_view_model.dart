@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gpt/util/openai_chat.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+import '../util/shared_preferences.dart';
 
 final settingsPageViewModel = StateNotifierProvider.autoDispose<SettingsPageViewModel, SettingsPageState>(
   (ref) => SettingsPageViewModel(ref)
@@ -9,17 +10,17 @@ final settingsPageViewModel = StateNotifierProvider.autoDispose<SettingsPageView
 
 class SettingsPageViewModel extends StateNotifier<SettingsPageState>{
   final StateNotifierProviderRef ref;
-  late final apiKeyController = TextEditingController(text: ref.watch(openAiChat).apiKey);
-  late final sysRoleMsgController = TextEditingController(text: ref.watch(openAiChat).systemMessage);
-  late final templetureController = TextEditingController(text: ref.watch(openAiChat).templeture.toString());
-  late final maxTokensController = TextEditingController(text: ref.watch(openAiChat).maxTokens.toString());
+  late final apiKeyController = TextEditingController(text: ref.watch(sharedPrefsRepo).openAiApiKey);
+  late final sysRoleMsgController = TextEditingController(text: ref.watch(sharedPrefsRepo).systemMessage);
+  late final templetureController = TextEditingController(text: ref.watch(sharedPrefsRepo).gptTempleture.toString());
+  late final maxTokensController = TextEditingController(text: ref.watch(sharedPrefsRepo).maxTokens.toString());
 
   
 
   SettingsPageViewModel(this.ref):super( SettingsPageState() );
 
-  void save(){
-    ref.watch(openAiChat.notifier).setConfig(
+  Future<void> save() async {
+    await ref.watch(sharedPrefsRepo).setConfig(
       apiKey: apiKeyController.text, 
       systemMessage: sysRoleMsgController.text,
       templeture: double.tryParse(templetureController.text),

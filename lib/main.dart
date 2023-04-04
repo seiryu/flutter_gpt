@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gpt/color_shemes.dart';
+import 'package:flutter_gpt/util/shared_preferences.dart';
 import 'package:flutter_gpt/view/chat_page.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
-  runApp(
-    const ProviderScope(
-      child: MyApp()
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+   runApp(
+    ProviderScope(
+      overrides: [
+        sharedPrefsRepo.overrideWithValue(
+          SharedPrefsRepo(prefs: await SharedPreferences.getInstance())
+        )
+      ],
+      child: const MyApp()
     ),
   );
 

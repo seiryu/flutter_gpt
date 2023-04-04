@@ -54,18 +54,18 @@ class SettingsPage extends HookConsumerWidget{
             ),
           ),
           const SizedBox(height:24),
-          // TextFormField(
-          //   keyboardType: const TextInputType.numberWithOptions(),
-          //   inputFormatters: [ FilteringTextInputFormatter.digitsOnly ],
-          //   controller: ref.watch(vm.notifier).maxTokensController,
-          //   decoration: const InputDecoration(
-          //     label: Text("Max Tokens"),
-          //     border: OutlineInputBorder(),
-          //   ),
-          // ),
-          // const SizedBox(height:24),
           TextFormField(
-            minLines: 5,
+            keyboardType: const TextInputType.numberWithOptions(),
+            inputFormatters: [ FilteringTextInputFormatter.digitsOnly ],
+            controller: ref.watch(vm.notifier).maxTokensController,
+            decoration: const InputDecoration(
+              label: Text("Max Tokens"),
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height:24),
+          TextFormField(
+            minLines: 10,
             maxLines: 20,
             controller: ref.watch(vm.notifier).sysRoleMsgController,
             decoration: const InputDecoration(
