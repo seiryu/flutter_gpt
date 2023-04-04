@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gpt/color_shemes.dart';
 import 'package:flutter_gpt/util/shared_preferences.dart';
+import 'package:flutter_gpt/util/theme_mode.dart';
 import 'package:flutter_gpt/view/chat_page.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,15 +22,15 @@ void main() async {
 
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends HookConsumerWidget {
   const MyApp({super.key});
 
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
       title: 'Flutter Demo',
-      themeMode: ThemeMode.light,
+      themeMode: ref.watch(themeMode),
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: lightColorScheme

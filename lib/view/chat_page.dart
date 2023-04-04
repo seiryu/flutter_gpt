@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gpt/util/shared_preferences.dart';
+import 'package:flutter_gpt/util/theme_mode.dart';
 import 'package:flutter_gpt/view/chat_page_view_model.dart';
 import 'package:flutter_gpt/view/openai_apikey_dialog.dart';
 import 'package:flutter_gpt/view/settings_page.dart';
@@ -31,6 +32,14 @@ class ChatPage extends HookConsumerWidget{
     return AppBar(
       title: const Text("Flutter GPT"),
       actions: [
+        IconButton(
+          onPressed: () => ref.watch(themeMode.notifier).toggle(), 
+          icon: Icon(
+            ref.watch(themeMode) == ThemeMode.dark
+              ? Icons.dark_mode
+              : Icons.light_mode
+          ),
+        ),
         IconButton(
           onPressed: () => Navigator.push(
             context,
@@ -91,9 +100,9 @@ class ChatPage extends HookConsumerWidget{
           children: [
             SelectableText(
               message.role,
-              style: Theme.of(context).textTheme.labelLarge,
+              style: Theme.of(context).textTheme.titleMedium,
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 8),
             MarkdownBody(
               styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(textScaleFactor: 1.1),
               data: message.content,
@@ -119,6 +128,7 @@ class ChatPage extends HookConsumerWidget{
       child: TextFormField(
         maxLines: 8,
         minLines: 1,
+        autofocus: true,
         textInputAction: TextInputAction.newline,
         keyboardType: TextInputType.multiline,
         controller: ref.watch(vm.notifier).textController,
