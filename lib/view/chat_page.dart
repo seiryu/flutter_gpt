@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gpt/util/openai_chat.dart';
 import 'package:flutter_gpt/util/shared_preferences.dart';
 import 'package:flutter_gpt/view/chat_page_view_model.dart';
 import 'package:flutter_gpt/view/openai_apikey_dialog.dart';
@@ -107,24 +106,28 @@ class ChatPage extends HookConsumerWidget{
   }
 
   Widget _buildTextField(BuildContext context, WidgetRef ref){
+    onSubmit() async {
+      if(ref.watch(sharedPrefsRepo).openAiApiKey.isEmpty){
+        await showDialog(context: context, builder: (_) => const OpenAiApiKeyDialog());
+      }else{
+        ref.watch(vm.notifier).onTextSent();
+      }
+    }
+
     return Container(
       padding: const EdgeInsets.all(16),
       child: TextFormField(
-        maxLines: 5,
+        maxLines: 8,
         minLines: 1,
+        textInputAction: TextInputAction.newline,
+        keyboardType: TextInputType.multiline,
         controller: ref.watch(vm.notifier).textController,
-        onFieldSubmitted: (_) => ref.watch(vm.notifier).onTextSent(),
+        onFieldSubmitted: (_) => onSubmit(),
         decoration: InputDecoration(
           hintText: "Ask me anything",
           border: const OutlineInputBorder(),
-          suffixIcon: IconButton(
-            onPressed: () async {
-              if(ref.watch(sharedPrefsRepo).openAiApiKey.isEmpty){
-                await showDialog(context: context, builder: (_) => const OpenAiApiKeyDialog());
-              }else{
-                ref.watch(vm.notifier).onTextSent();
-              }
-            },
+          suffix: IconButton(
+            onPressed: () => onSubmit(),
             icon: const Icon(Icons.send),
           ),
         ),
