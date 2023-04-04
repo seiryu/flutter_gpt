@@ -57,9 +57,17 @@ class ChatPage extends HookConsumerWidget{
       padding: const EdgeInsets.all(8),
       child: ListView(
         shrinkWrap: true,
-        children: ref.watch(vm).messages.map(
-          (message) => _buildListItem(context, message)
-        ).toList(),
+        children: [
+          for(var message in ref.watch(vm).messages) ...{
+             _buildListItem(context, message)
+          },
+          if( ref.watch(vm).isStreaming )
+            Container(
+              margin: const EdgeInsets.only(top: 8.0),
+              alignment: Alignment.center,
+              child: const CircularProgressIndicator()
+            )
+        ],
       ),
     );
   }
