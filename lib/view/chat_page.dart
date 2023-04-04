@@ -40,8 +40,8 @@ class ChatPage extends HookConsumerWidget{
           onPressed: () => ref.watch(themeMode.notifier).toggle(), 
           icon: Icon(
             ref.watch(themeMode) == ThemeMode.dark
-              ? Icons.dark_mode
-              : Icons.light_mode
+              ? Icons.light_mode
+              : Icons.dark_mode
           ),
         ),
         IconButton(
