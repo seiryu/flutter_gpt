@@ -14,7 +14,7 @@ class SharedPrefsRepo extends StateNotifier<SharedPrefsRepoState>{
       openAiApiKey: prefs.getString("openAiApiKey") ?? "", 
       gptTempleture: prefs.getDouble("gptTempleture") ?? 0.9, 
       systemMessage: prefs.getString("gptSystemMessage") ?? "You are a helpful assistant.", 
-      maxTokens: prefs.getInt("gptMaxTokens") ?? 2048,
+      maxTokens: prefs.getInt("gptMaxTokens") ?? 1024,
       themeMode: ThemeMode.values[prefs.getInt("themeMode") ?? ThemeMode.light.index],
     )
   );
