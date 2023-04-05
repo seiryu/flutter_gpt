@@ -25,6 +25,8 @@ class ChatPage extends HookConsumerWidget{
             Expanded(
               child: _buildList(context, ref),
             ),
+            if( ref.watch(vm).isStreaming )
+              const LinearProgressIndicator(),
             _buildTextField(context, ref),
           ],
         ),
@@ -71,7 +73,6 @@ class ChatPage extends HookConsumerWidget{
 
   Widget _buildList(BuildContext context, WidgetRef ref){
     return SingleChildScrollView(
-      
       reverse: true,
       padding: const EdgeInsets.all(8),
       child: Column(
@@ -79,12 +80,6 @@ class ChatPage extends HookConsumerWidget{
           for(var message in ref.watch(vm).messages) ...{
              _buildListItem(context, ref, message)
           },
-          if( ref.watch(vm).isStreaming )
-            Container(
-              margin: const EdgeInsets.only(top: 8.0),
-              alignment: Alignment.center,
-              child: const CircularProgressIndicator()
-            )
         ],
       ),
     );
@@ -95,7 +90,7 @@ class ChatPage extends HookConsumerWidget{
       color: message.role == "assistant"
           ? Theme.of(context).colorScheme.surface
           : Theme.of(context).colorScheme.tertiaryContainer,
-      margin: const EdgeInsets.all(8),
+      margin: const EdgeInsets.all(16),
       semanticContainer: false,
       child: Container(
         padding: const EdgeInsets.all(8),
@@ -135,32 +130,35 @@ class ChatPage extends HookConsumerWidget{
 
     return Container(
       padding: const EdgeInsets.all(16),
-      child: Material(
-        type: MaterialType.card,
-        elevation: 1,
-        child: TextFormField(
-          maxLines: 8,
-          minLines: 1,
-          autofocus: true,
-          textInputAction: TextInputAction.newline,
-          keyboardType: TextInputType.multiline,
-          controller: ref.watch(vm.notifier).textController,
-          onFieldSubmitted: (_) => onSubmit(),
-          decoration: InputDecoration(
-            enabled: !ref.watch(vm).isStreaming,
-            hintText: "Ask me anything ...",
-            border: const OutlineInputBorder(),
-            suffixIcon: Container(
-              padding: const EdgeInsets.only(right: 8),
-              child: IconButton(
-                onPressed: () => onSubmit(),
-                icon: const Icon(Icons.send),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surfaceVariant,
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Expanded(
+            child: TextFormField(
+              maxLines: 8,
+              minLines: 1,
+              autofocus: true,
+              textInputAction: TextInputAction.newline,
+              keyboardType: TextInputType.multiline,
+              controller: ref.watch(vm.notifier).textController,
+              decoration: const InputDecoration(
+                isCollapsed: true,
+                hintText: "Ask me anything ...",
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.all(8)
               ),
             ),
-            contentPadding: const EdgeInsets.all(12)
           ),
-        ),
-      )
+          IconButton(
+            color: Theme.of(context).colorScheme.primary,
+            onPressed: ref.watch(vm).isStreaming ? null : () => onSubmit(),
+            icon: const Icon(Icons.send),
+          ),
+        ],
+      ),
     );
   }
 }
