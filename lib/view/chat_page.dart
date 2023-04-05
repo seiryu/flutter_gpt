@@ -90,21 +90,21 @@ class ChatPage extends HookConsumerWidget{
       color: message.role == "assistant"
           ? Theme.of(context).colorScheme.surface
           : Theme.of(context).colorScheme.tertiaryContainer,
-      margin: const EdgeInsets.all(16),
+      margin: const EdgeInsets.all(12),
       semanticContainer: false,
       child: Container(
         padding: const EdgeInsets.all(8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(4),
-              child: SelectableText(
-                message.role,
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-            ),
-            const SizedBox(height: 4),
+            // Padding(
+            //   padding: const EdgeInsets.all(4),
+            //   child: SelectableText(
+            //     message.role,
+            //     style: Theme.of(context).textTheme.titleMedium,
+            //   ),
+            // ),
+            // const SizedBox(height: 4),
             MarkdownWidget(
               padding: const EdgeInsets.all(0),
               shrinkWrap: true,
@@ -120,6 +120,9 @@ class ChatPage extends HookConsumerWidget{
   }
 
   Widget _buildTextField(BuildContext context, WidgetRef ref){
+    final bool canSendText = 
+        !ref.watch(vm).isStreaming && !ref.watch(vm).isTextFieldTextEmpty();
+
     onSubmit() async {
       if(ref.read(sharedPrefsRepo).openAiApiKey.isEmpty){
         await showDialog(context: context, builder: (_) => const OpenAiApiKeyDialog());
@@ -144,6 +147,7 @@ class ChatPage extends HookConsumerWidget{
               textInputAction: TextInputAction.newline,
               keyboardType: TextInputType.multiline,
               controller: ref.watch(vm.notifier).textController,
+              onChanged: (str) => ref.read(vm.notifier).onTextFieldChanged(str),
               decoration: const InputDecoration(
                 isCollapsed: true,
                 hintText: "Ask me anything ...",
@@ -154,7 +158,7 @@ class ChatPage extends HookConsumerWidget{
           ),
           IconButton(
             color: Theme.of(context).colorScheme.primary,
-            onPressed: ref.watch(vm).isStreaming ? null : () => onSubmit(),
+            onPressed: canSendText ? () => onSubmit() : null,
             icon: const Icon(Icons.send),
           ),
         ],

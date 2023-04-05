@@ -65,7 +65,7 @@ class SettingsPage extends HookConsumerWidget{
         const SizedBox(height:24),
         TextFormField(
           minLines: 10,
-          maxLines: 20,
+          maxLines: null,
           controller: ref.watch(vm.notifier).sysRoleMsgController,
           decoration: const InputDecoration(
             label: Text("System Role Message"),

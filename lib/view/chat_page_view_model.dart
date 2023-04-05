@@ -14,13 +14,18 @@ class ChatPageViewModel extends StateNotifier<ChatPageState>{
 
   ChatPageViewModel(this.ref) : super( ChatPageState() );
 
+  void onTextFieldChanged(String str){
+    state = state.copyWith(
+      textFieldtext: str,
+    );
+  }
 
   void onTextSent(){
-    if(state.isStreaming || textController.text.isEmpty) return;
+    if(state.isStreaming || state.isTextFieldTextEmpty()) return;
 
     
     state = state.addMessage(
-      CompletionMessage("user", textController.text)
+      CompletionMessage("user", state.textFieldtext)
     );
     state = state.copyWith(isStreaming: true);
     
@@ -64,11 +69,13 @@ class ChatPageState{
   final List<CompletionMessage> messages;
   final bool isStreaming;
   final bool hasError;
+  final String textFieldtext;
 
   ChatPageState({
     this.messages = const [],
     this.isStreaming = false,
     this.hasError = false,
+    this.textFieldtext = "",
   }): messageCount = messages.length;
 
   ChatPageState addMessage(CompletionMessage msg){
@@ -81,7 +88,6 @@ class ChatPageState{
     if(index > messageCount){
       return this;
     }
-
     if(index == messageCount){
       return addMessage(msg);
     }
@@ -95,10 +101,21 @@ class ChatPageState{
     );
   }
 
-  ChatPageState copyWith( { List<CompletionMessage>? messages, bool? isStreaming }){
+  bool isTextFieldTextEmpty(){
+    return textFieldtext.trim().isEmpty;
+  }
+
+  ChatPageState copyWith({
+    List<CompletionMessage>? messages,
+    bool? isStreaming,
+    bool? hasError,
+    String? textFieldtext,
+  }){
     return ChatPageState(
       messages: messages ?? [...this.messages],
       isStreaming: isStreaming ?? this.isStreaming,
+      hasError: hasError ?? this.hasError,
+      textFieldtext: textFieldtext ?? this.textFieldtext,
     );
   }
 }
@@ -115,4 +132,6 @@ class CompletionMessage{
       this.content + content,
     );
   }
+
+  
 }
