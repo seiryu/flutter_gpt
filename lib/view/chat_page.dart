@@ -16,7 +16,7 @@ class ChatPage extends HookConsumerWidget{
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-      behavior: HitTestBehavior.opaque, // これを追加！！！
+      behavior: HitTestBehavior.opaque,
       child: Scaffold(
         appBar: _buildAppBar(context, ref),
         body: Column(
@@ -36,10 +36,11 @@ class ChatPage extends HookConsumerWidget{
       title: const Text("Flutter GPT"),
       actions: [
         IconButton(
-          onPressed: (){
-            final current = ref.watch(sharedPrefsRepo).themeMode;
-            ref.watch(sharedPrefsRepo.notifier).setConfig(
+          onPressed: () async {
+            final current = ref.read(sharedPrefsRepo).themeMode;
+            await ref.read(sharedPrefsRepo.notifier).setConfig(
               themeMode: current == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark
+              // themeMode: ThemeMode.light
             );
           },
           icon: Icon(
@@ -60,7 +61,7 @@ class ChatPage extends HookConsumerWidget{
           icon: const Icon(Icons.settings),
         ),
         IconButton(
-          onPressed: () => ref.watch(vm.notifier).clear(),
+          onPressed: () => ref.read(vm.notifier).clear(),
           icon: const Icon(Icons.delete),
         ),
       ],
@@ -123,10 +124,10 @@ class ChatPage extends HookConsumerWidget{
 
   Widget _buildTextField(BuildContext context, WidgetRef ref){
     onSubmit() async {
-      if(ref.watch(sharedPrefsRepo).openAiApiKey.isEmpty){
+      if(ref.read(sharedPrefsRepo).openAiApiKey.isEmpty){
         await showDialog(context: context, builder: (_) => const OpenAiApiKeyDialog());
       }else{
-        ref.watch(vm.notifier).onTextSent();
+        ref.read(vm.notifier).onTextSent();
       }
     }
 

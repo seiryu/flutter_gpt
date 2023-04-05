@@ -20,7 +20,7 @@ class SettingsPageViewModel extends StateNotifier<SettingsPageState>{
   SettingsPageViewModel(this.ref):super( SettingsPageState() );
 
   Future<void> save() async {
-    await ref.watch(sharedPrefsRepo.notifier).setConfig(
+    await ref.read(sharedPrefsRepo.notifier).setConfig(
       openAiApiKey: apiKeyController.text, 
       systemMessage: sysRoleMsgController.text,
       gptTempleture: double.tryParse(templetureController.text),

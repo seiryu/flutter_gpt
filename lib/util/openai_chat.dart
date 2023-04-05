@@ -13,7 +13,7 @@ class OpenAiChat{
   Stream<OpenAIStreamChatCompletionChoiceDeltaModel> createCompletionStream(
     List<OpenAIChatCompletionChoiceMessageModel> messages
   ){
-    final apiKey = ref.watch(sharedPrefsRepo).openAiApiKey;
+    final apiKey = ref.read(sharedPrefsRepo).openAiApiKey;
     if(apiKey.isEmpty){
       throw const NoOpenAiApiKeyException();  
     }
@@ -24,15 +24,15 @@ class OpenAiChat{
       0, 
       OpenAIChatCompletionChoiceMessageModel(
         role: OpenAIChatMessageRole.system,
-        content: ref.watch(sharedPrefsRepo).systemMessage
+        content: ref.read(sharedPrefsRepo).systemMessage
       ),
     );
 
     var stream = OpenAI.instance.chat.createStream(
       model: "gpt-3.5-turbo", 
       messages: messages,
-      temperature: ref.watch(sharedPrefsRepo).gptTempleture,
-      maxTokens: ref.watch(sharedPrefsRepo).maxTokens,
+      temperature: ref.read(sharedPrefsRepo).gptTempleture,
+      maxTokens: ref.read(sharedPrefsRepo).maxTokens,
     );
 
     return stream.map((event) => event.choices.first.delta);
