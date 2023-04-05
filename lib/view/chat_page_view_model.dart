@@ -1,5 +1,9 @@
 import 'package:dart_openai/openai.dart';
+import 'package:file_selector/file_selector.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'dart:ui' as ui;
 import 'package:flutter_gpt/util/openai_chat.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -12,7 +16,15 @@ class ChatPageViewModel extends StateNotifier<ChatPageState>{
   final textController = TextEditingController();
 
 
-  ChatPageViewModel(this.ref) : super( ChatPageState() );
+  ChatPageViewModel(this.ref) : super( 
+    ChatPageState(
+      messages: [],
+      textFieldtext: "",
+      chatListKey: GlobalKey(),
+      isStreaming: false,
+      hasError: false,
+    )
+  );
 
   void onTextFieldChanged(String str){
     state = state.copyWith(
@@ -58,25 +70,51 @@ class ChatPageViewModel extends StateNotifier<ChatPageState>{
 
   void clear(){
     if(!state.isStreaming){
-      state = ChatPageState(messages: [], isStreaming: false);
+      state = state.copyWith(messages: []);
     }
+  }
 
+  Future<bool> saveChatAsPng() async {
+    try{
+      final boundary = 
+          state.chatListKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+      final image = await boundary.toImage(pixelRatio: 2.0);
+      final byteData =
+          await image.toByteData(format: ui.ImageByteFormat.png );
+      final pngBytes = byteData!.buffer.asUint8List();
+
+      final fileName = "${state.title}.png";
+      final String? path = await getSavePath(suggestedName: fileName);
+      if (path == null)   return false;
+
+      final xFile = XFile.fromData(pngBytes, mimeType: "image/png");
+      await xFile.saveTo(path);
+
+      return true;
+    }catch(e){
+      print(e);
+      return false;
+    }
   }
 }
 
 class ChatPageState{
+  final String title;
   final int messageCount;
   final List<CompletionMessage> messages;
   final bool isStreaming;
   final bool hasError;
   final String textFieldtext;
+  final GlobalKey chatListKey;
 
   ChatPageState({
-    this.messages = const [],
-    this.isStreaming = false,
-    this.hasError = false,
-    this.textFieldtext = "",
-  }): messageCount = messages.length;
+    required this.messages,
+    required this.isStreaming,
+    required this.hasError,
+    required this.textFieldtext,
+    required this.chatListKey,
+  }): messageCount = messages.length, 
+      title = messages.isEmpty ? "Flutter GPT" : "${messages.first.content.substring(0, 10)}...";
 
   ChatPageState addMessage(CompletionMessage msg){
     return copyWith(
@@ -110,12 +148,14 @@ class ChatPageState{
     bool? isStreaming,
     bool? hasError,
     String? textFieldtext,
+    GlobalKey? chatListKey,
   }){
     return ChatPageState(
       messages: messages ?? [...this.messages],
       isStreaming: isStreaming ?? this.isStreaming,
       hasError: hasError ?? this.hasError,
       textFieldtext: textFieldtext ?? this.textFieldtext,
+      chatListKey: chatListKey ?? this.chatListKey,
     );
   }
 }

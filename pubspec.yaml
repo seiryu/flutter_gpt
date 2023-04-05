@@ -39,6 +39,7 @@ dependencies:
   dart_openai: ^1.9.1
   shared_preferences: ^2.1.0
   markdown_widget: ^2.1.0
+  file_selector: ^0.9.2+4
 
 dev_dependencies:
   flutter_test:

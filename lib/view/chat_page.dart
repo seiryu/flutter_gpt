@@ -36,7 +36,7 @@ class ChatPage extends HookConsumerWidget{
 
   AppBar _buildAppBar(BuildContext context, WidgetRef ref){
     return AppBar(
-      title: const Text("Flutter GPT"),
+      title: Text(ref.watch(vm).title),
       actions: [
         IconButton(
           onPressed: () async {
@@ -51,6 +51,26 @@ class ChatPage extends HookConsumerWidget{
               ? Icons.light_mode
               : Icons.dark_mode
           ),
+        ),
+        IconButton(
+          onPressed: () async {
+            if( await ref.read(vm.notifier).saveChatAsPng() ){
+              // ignore: use_build_context_synchronously
+              showDialog(
+                context: context,
+                builder: (_) => AlertDialog(
+                  title: const Text("保存が完了しました。"),
+                  actions: [
+                    TextButton(
+                      child: const Text("OK"),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ],
+                ),
+              );
+            }
+          },
+          icon: const Icon(Icons.save),
         ),
         IconButton(
           onPressed: () => Navigator.push(
@@ -75,12 +95,18 @@ class ChatPage extends HookConsumerWidget{
     return SingleChildScrollView(
       reverse: true,
       padding: const EdgeInsets.all(8),
-      child: Column(
-        children: [
-          for(var message in ref.watch(vm).messages) ...{
-             _buildListItem(context, ref, message)
-          },
-        ],
+      child: RepaintBoundary(
+        key: ref.watch(vm).chatListKey,
+        child: Container(
+          decoration: BoxDecoration(color: Theme.of(context).colorScheme.surface),
+          child: Column(
+            children: [
+              for(var message in ref.watch(vm).messages) ...{
+                 _buildListItem(context, ref, message)
+              },
+            ],
+          ),
+        ),
       ),
     );
   }
