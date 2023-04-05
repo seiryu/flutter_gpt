@@ -32,49 +32,47 @@ class SettingsPage extends HookConsumerWidget{
   }
 
   Widget _buildBody(BuildContext context, WidgetRef ref){
-    return Container(
+    return ListView(
       padding: const EdgeInsets.all(16),
-      child: ListView(
-        children: [
-          TextFormField(
-            controller: ref.watch(vm.notifier).apiKeyController,
-            decoration: const InputDecoration(
-              label: Text("API Key"),
-              border: OutlineInputBorder(),
-            ),
+      children: [
+        TextFormField(
+          controller: ref.watch(vm.notifier).apiKeyController,
+          decoration: const InputDecoration(
+            label: Text("API Key"),
+            border: OutlineInputBorder(),
           ),
-          const SizedBox(height:24),
-          TextFormField(
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            inputFormatters: [ FilteringTextInputFormatter.allow(RegExp('^\$|^(0|([1-9][0-9]{0,}))(\\.[0-9]{0,})?\$')) ],
-            controller: ref.watch(vm.notifier).templetureController,
-            decoration: const InputDecoration(
-              label: Text("Templeture"),
-              border: OutlineInputBorder(),
-            ),
+        ),
+        const SizedBox(height:24),
+        TextFormField(
+          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+          inputFormatters: [ FilteringTextInputFormatter.allow(RegExp('^\$|^(0|([1-9][0-9]{0,}))(\\.[0-9]{0,})?\$')) ],
+          controller: ref.watch(vm.notifier).templetureController,
+          decoration: const InputDecoration(
+            label: Text("Templeture"),
+            border: OutlineInputBorder(),
           ),
-          const SizedBox(height:24),
-          TextFormField(
-            keyboardType: const TextInputType.numberWithOptions(),
-            inputFormatters: [ FilteringTextInputFormatter.digitsOnly ],
-            controller: ref.watch(vm.notifier).maxTokensController,
-            decoration: const InputDecoration(
-              label: Text("Max Tokens"),
-              border: OutlineInputBorder(),
-            ),
+        ),
+        const SizedBox(height:24),
+        TextFormField(
+          keyboardType: const TextInputType.numberWithOptions(),
+          inputFormatters: [ FilteringTextInputFormatter.digitsOnly ],
+          controller: ref.watch(vm.notifier).maxTokensController,
+          decoration: const InputDecoration(
+            label: Text("Max Tokens"),
+            border: OutlineInputBorder(),
           ),
-          const SizedBox(height:24),
-          TextFormField(
-            minLines: 10,
-            maxLines: 20,
-            controller: ref.watch(vm.notifier).sysRoleMsgController,
-            decoration: const InputDecoration(
-              label: Text("System Role Message"),
-              border: OutlineInputBorder(),
-            ),
+        ),
+        const SizedBox(height:24),
+        TextFormField(
+          minLines: 10,
+          maxLines: 20,
+          controller: ref.watch(vm.notifier).sysRoleMsgController,
+          decoration: const InputDecoration(
+            label: Text("System Role Message"),
+            border: OutlineInputBorder(),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
   // Widget

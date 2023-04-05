@@ -20,6 +20,7 @@ class ChatPage extends HookConsumerWidget{
       child: Scaffold(
         appBar: _buildAppBar(context, ref),
         body: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Expanded(
               child: _buildList(context, ref),
@@ -70,6 +71,7 @@ class ChatPage extends HookConsumerWidget{
 
   Widget _buildList(BuildContext context, WidgetRef ref){
     return SingleChildScrollView(
+      
       reverse: true,
       padding: const EdgeInsets.all(8),
       child: Column(
