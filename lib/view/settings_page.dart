@@ -35,6 +35,34 @@ class SettingsPage extends HookConsumerWidget{
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
+        Row(
+          children: [
+            const Text('テーマ'),
+            const SizedBox(width: 16),
+            SegmentedButton(
+              segments: const [
+                ButtonSegment<ThemeMode>(
+                  value: ThemeMode.light,
+                  icon: Icon(Icons.light_mode),
+                  label: Text("light")
+                ),
+                ButtonSegment<ThemeMode>(
+                  value: ThemeMode.dark,
+                  icon: Icon(Icons.dark_mode),
+                  label: Text("dark")
+                ),
+                ButtonSegment<ThemeMode>(
+                  value: ThemeMode.system,
+                  icon: Icon(Icons.hdr_auto),
+                  label: Text("system")
+                ),
+              ], 
+              selected: {ref.watch(vm).themeMode},
+              onSelectionChanged: (modes) => ref.read(vm.notifier).onThemeModeChanged(modes.first),
+            ),
+          ],
+        ),
+        const SizedBox(height:24),
         TextFormField(
           controller: ref.watch(vm.notifier).apiKeyController,
           decoration: const InputDecoration(

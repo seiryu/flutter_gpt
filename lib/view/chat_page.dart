@@ -41,20 +41,6 @@ class ChatPage extends HookConsumerWidget{
       actions: [
         IconButton(
           onPressed: () async {
-            final current = ref.read(sharedPrefsRepo).themeMode;
-            await ref.read(sharedPrefsRepo.notifier).setConfig(
-              themeMode: current == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark
-              // themeMode: ThemeMode.light
-            );
-          },
-          icon: Icon(
-            ref.watch(sharedPrefsRepo).themeMode == ThemeMode.dark
-              ? Icons.light_mode
-              : Icons.dark_mode
-          ),
-        ),
-        IconButton(
-          onPressed: () async {
             if( await ref.read(vm.notifier).saveChatAsPng() ){
               // ignore: use_build_context_synchronously
               showDialog(
@@ -73,17 +59,6 @@ class ChatPage extends HookConsumerWidget{
           },
           icon: const Icon(Icons.save),
         ),
-        // IconButton(
-        //   onPressed: () => Navigator.push(
-        //     context,
-        //     MaterialPageRoute(
-        //       maintainState: false,
-        //       fullscreenDialog: true,
-        //       builder: (_) => const SettingsPage(),
-        //     ),
-        //   ),
-        //   icon: const Icon(Icons.settings),
-        // ),
         IconButton(
           onPressed: () => ref.read(vm.notifier).clear(),
           icon: const Icon(Icons.delete),
