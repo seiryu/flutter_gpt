@@ -21,9 +21,10 @@ class AdvisePage extends HookConsumerWidget{
         children: [
           _buildForm(context, ref),
           if(message != null)
-            Expanded(
-              child: _buildAdviseContent(context, ref, message),
-            ),
+            // Expanded(
+              // child: 
+              _buildAdviseContent(context, ref, message),
+            // ),
         ],
       ),
       bottomNavigationBar: ref.watch(vm).isStreaming
@@ -88,11 +89,8 @@ class AdvisePage extends HookConsumerWidget{
   }
 
   Widget _buildAdviseContent(BuildContext context, WidgetRef ref, OpenAiCompletionMessage message){
-
     return Card(
-      color: message.role == MessageRole.assistant
-          ? Theme.of(context).colorScheme.surface
-          : Theme.of(context).colorScheme.tertiaryContainer,
+      color: Theme.of(context).colorScheme.surface,
       margin: const EdgeInsets.all(12),
       semanticContainer: false,
       child: Container(
