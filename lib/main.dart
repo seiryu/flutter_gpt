@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gpt/color_shemes.dart';
 import 'package:flutter_gpt/util/shared_preferences.dart';
 import 'package:flutter_gpt/view/chat_page.dart';
+import 'package:flutter_gpt/view/home_nav_page.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -39,7 +40,8 @@ class MyApp extends HookConsumerWidget {
         colorScheme: darkColorScheme,
       ),
       debugShowCheckedModeBanner: false,
-      home: const ChatPage(),
+      // home: const ChatPage(),
+      home: const HomeNavPage(),
     );
   }
 }

@@ -99,7 +99,7 @@ class ChatPageState{
   int get messageCount => _messages.length;
 
   String get title{
-    if(_messages.isEmpty) return "Flutter GPT";
+    if(_messages.isEmpty) return "チャット";
 
     final content = _messages.first.content.replaceAll(RegExp(r'\n|\r\n|\r'), " ");
     if(content.length < 10) return content;

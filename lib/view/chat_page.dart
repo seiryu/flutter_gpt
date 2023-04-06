@@ -73,17 +73,17 @@ class ChatPage extends HookConsumerWidget{
           },
           icon: const Icon(Icons.save),
         ),
-        IconButton(
-          onPressed: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              maintainState: false,
-              fullscreenDialog: true,
-              builder: (_) => const SettingsPage(),
-            ),
-          ),
-          icon: const Icon(Icons.settings),
-        ),
+        // IconButton(
+        //   onPressed: () => Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //       maintainState: false,
+        //       fullscreenDialog: true,
+        //       builder: (_) => const SettingsPage(),
+        //     ),
+        //   ),
+        //   icon: const Icon(Icons.settings),
+        // ),
         IconButton(
           onPressed: () => ref.read(vm.notifier).clear(),
           icon: const Icon(Icons.delete),

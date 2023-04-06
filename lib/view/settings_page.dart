@@ -20,7 +20,7 @@ class SettingsPage extends HookConsumerWidget{
   AppBar _buildAppBar(BuildContext context, WidgetRef ref){
     return AppBar(
       title: const Text("設定"),
-      leading: const CloseButton(),
+      // leading: const CloseButton(),
     );
   }
 
