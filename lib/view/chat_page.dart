@@ -3,7 +3,6 @@ import 'package:flutter_gpt/util/openai_chat.dart';
 import 'package:flutter_gpt/util/shared_preferences.dart';
 import 'package:flutter_gpt/view/chat_page_view_model.dart';
 import 'package:flutter_gpt/view/openai_apikey_dialog.dart';
-import 'package:flutter_gpt/view/settings_page.dart';
 import 'package:markdown_widget/markdown_widget.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 

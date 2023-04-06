@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_gpt/util/openai_chat.dart';
 import 'package:flutter_gpt/view/advise_page_view_model.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -18,15 +17,13 @@ class AdvisePage extends HookConsumerWidget{
 
     return Scaffold(
       appBar: _buildAppBar(context, ref),
-      body: Column(
+      body: ListView(
         children: [
           _buildForm(context, ref),
           if(message != null)
             Expanded(
-              child: SingleChildScrollView(
-                child: _buildAdviseContent(context, ref, message),
-              ),
-            )
+              child: _buildAdviseContent(context, ref, message),
+            ),
         ],
       )
     );
@@ -48,28 +45,38 @@ class AdvisePage extends HookConsumerWidget{
             items: [
               for(var breed in breeds)...{
                 DropdownMenuItem(
+                  alignment: AlignmentDirectional.center,
                   value: breed,
-                  child: Text(breed),
+                  child: Container(
+                    width: 120,
+                    alignment: Alignment.center,
+                    child: Text(breed),
+                  ),
                 )
               }
             ], 
             onChanged: (v) => ref.read(vm.notifier).onSelectBreed(v)
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: 16),
           DropdownButton<String>(
             value: ref.watch(vm).selectedContent,
             items: [
               for(var content in contents)...{
                 DropdownMenuItem(
+                  alignment: AlignmentDirectional.center,
                   value: content,
-                  child: Text(content),
+                  child: Container(
+                    width: 160,
+                    alignment: Alignment.center,
+                    child: Text(content),
+                  ),
                 )
               }
             ], 
             onChanged: (v) => ref.read(vm.notifier).onSelectContent(v)
           ),
-          const SizedBox(width: 8),
-          ElevatedButton(
+          const SizedBox(width: 16),
+          FilledButton(
             onPressed: () => ref.read(vm.notifier).submit(), 
             child: const Text("相談")
           ),

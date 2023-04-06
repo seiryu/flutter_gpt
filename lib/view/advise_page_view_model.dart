@@ -1,6 +1,3 @@
-
-
-import 'package:dart_openai/openai.dart';
 import 'package:flutter_gpt/util/openai_chat.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -15,9 +12,11 @@ final breeds = [
 
 final contents = [
   "育て方",
+  "栽培時期",
   "水やり方法",
-  "病気",
-  "害虫"
+  "病気と対策",
+  "害虫と対策",
+  "育てやすい品種",
 ];
 
 
