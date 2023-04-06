@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gpt/util/openai_chat.dart';
 import 'package:flutter_gpt/util/shared_preferences.dart';
 import 'package:flutter_gpt/view/chat_page_view_model.dart';
 import 'package:flutter_gpt/view/openai_apikey_dialog.dart';
@@ -111,9 +112,9 @@ class ChatPage extends HookConsumerWidget{
     );
   }
 
-  Widget _buildListItem(BuildContext context, WidgetRef ref, CompletionMessage message){
+  Widget _buildListItem(BuildContext context, WidgetRef ref, OpenAiCompletionMessage message){
     return Card(
-      color: message.role == "assistant"
+      color: message.role == MessageRole.assistant
           ? Theme.of(context).colorScheme.surface
           : Theme.of(context).colorScheme.tertiaryContainer,
       margin: const EdgeInsets.all(12),
@@ -123,14 +124,6 @@ class ChatPage extends HookConsumerWidget{
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Padding(
-            //   padding: const EdgeInsets.all(4),
-            //   child: SelectableText(
-            //     message.role,
-            //     style: Theme.of(context).textTheme.titleMedium,
-            //   ),
-            // ),
-            // const SizedBox(height: 4),
             MarkdownWidget(
               padding: const EdgeInsets.all(0),
               shrinkWrap: true,

@@ -1,6 +1,4 @@
-import 'package:dart_openai/openai.dart';
 import 'package:file_selector/file_selector.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:ui' as ui;
@@ -35,32 +33,16 @@ class ChatPageViewModel extends StateNotifier<ChatPageState>{
   void onTextSent(){
     if(state.isStreaming || state.isTextFieldTextEmpty()) return;
 
-    
+
     state = state.addMessage(
-      CompletionMessage("user", state.textFieldtext)
-    );
-    state = state.copyWith(isStreaming: true);
-    
-    var stream = ref.read(openAiChat).createCompletionStream(
-      state.messages.map(
-        (e) => OpenAIChatCompletionChoiceMessageModel(
-          role: e.role == "user" ? OpenAIChatMessageRole.user : OpenAIChatMessageRole.assistant, 
-          content: e.content
-        )
-      ).toList()
+      OpenAiCompletionMessage(role: MessageRole.user, content: state.textFieldtext)
     );
 
+    state = state.copyWith(isStreaming: true);
+    final stream = ref.read(openAiChat).createCompletionStream( state.messages );
     int index = state.messages.length;
     stream.listen(
-      (delta) {
-        state = state.concatMessageAt(
-          index,
-          CompletionMessage(
-            delta.role ?? "no role",
-            delta.content ?? ""
-          )
-        );
-      },
+      (delta) => state = state.concatMessageAt( index,  delta ),
       onError: (e) => print(e),
       onDone: () => state = state.copyWith(isStreaming: false),
       cancelOnError: false,
@@ -99,30 +81,39 @@ class ChatPageViewModel extends StateNotifier<ChatPageState>{
 }
 
 class ChatPageState{
-  final String title;
-  final int messageCount;
-  final List<CompletionMessage> messages;
+  final List<OpenAiCompletionMessage> _messages;
   final bool isStreaming;
   final bool hasError;
   final String textFieldtext;
   final GlobalKey chatListKey;
 
   ChatPageState({
-    required this.messages,
+    required List<OpenAiCompletionMessage> messages,
     required this.isStreaming,
     required this.hasError,
     required this.textFieldtext,
     required this.chatListKey,
-  }): messageCount = messages.length, 
-      title = messages.isEmpty ? "Flutter GPT" : "${messages.first.content.substring(0, 10)}...";
+  }): _messages = [...messages];
 
-  ChatPageState addMessage(CompletionMessage msg){
+  List<OpenAiCompletionMessage> get messages => [..._messages];
+  int get messageCount => _messages.length;
+
+  String get title{
+    if(_messages.isEmpty) return "Flutter GPT";
+
+    final content = _messages.first.content.replaceAll(RegExp(r'\n|\r\n|\r'), " ");
+    if(content.length < 10) return content;
+
+    return "${content.substring(0, 10)}...";
+  }
+
+  ChatPageState addMessage(OpenAiCompletionMessage msg){
     return copyWith(
-      messages: [...messages, msg ],
+      messages: [..._messages, msg ],
     );
   }
 
-  ChatPageState concatMessageAt(int index, CompletionMessage msg){
+  ChatPageState concatMessageAt(int index, OpenAiCompletionMessage msg){
     if(index > messageCount){
       return this;
     }
@@ -131,11 +122,11 @@ class ChatPageState{
     }
 
 
-    var first = messages.sublist(0, index);
-    var last = messages.sublist(index + 1);
+    var first = _messages.sublist(0, index);
+    var last = _messages.sublist(index + 1);
 
     return copyWith(
-      messages: [...first, messages[index].concat(msg.content), ...last],
+      messages: [...first, _messages[index] + msg, ...last],
     );
   }
 
@@ -144,34 +135,18 @@ class ChatPageState{
   }
 
   ChatPageState copyWith({
-    List<CompletionMessage>? messages,
+    List<OpenAiCompletionMessage>? messages,
     bool? isStreaming,
     bool? hasError,
     String? textFieldtext,
     GlobalKey? chatListKey,
   }){
     return ChatPageState(
-      messages: messages ?? [...this.messages],
+      messages: messages ?? [..._messages],
       isStreaming: isStreaming ?? this.isStreaming,
       hasError: hasError ?? this.hasError,
       textFieldtext: textFieldtext ?? this.textFieldtext,
       chatListKey: chatListKey ?? this.chatListKey,
     );
   }
-}
-
-class CompletionMessage{
-  final String role;
-  final String content;
-
-  CompletionMessage(this.role, this.content);
-
-  CompletionMessage concat(String content){
-    return CompletionMessage(
-      role, 
-      this.content + content,
-    );
-  }
-
-  
 }
