@@ -25,7 +25,9 @@ class AdvisePage extends HookConsumerWidget{
               child: _buildAdviseContent(context, ref, message),
             ),
         ],
-      )
+      ),
+      bottomNavigationBar: ref.watch(vm).isStreaming
+          ? const LinearProgressIndicator() : null,
     );
   }
 
