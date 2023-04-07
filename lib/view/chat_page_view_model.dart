@@ -47,7 +47,7 @@ class ChatPageViewModel extends StateNotifier<ChatPageState>{
       onDone: () => state = state.copyWith(isStreaming: false),
       cancelOnError: false,
     );
-    textController.text = "";
+    textController.clear();
   }
 
   void clear(){

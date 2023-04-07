@@ -20,7 +20,6 @@ class SettingsPage extends HookConsumerWidget{
   AppBar _buildAppBar(BuildContext context, WidgetRef ref){
     return AppBar(
       title: const Text("設定"),
-      // leading: const CloseButton(),
     );
   }
 
@@ -58,13 +57,14 @@ class SettingsPage extends HookConsumerWidget{
                 ),
               ], 
               selected: {ref.watch(vm).themeMode},
-              onSelectionChanged: (modes) => ref.read(vm.notifier).onThemeModeChanged(modes.first),
+              onSelectionChanged: (modes) => ref.read(vm.notifier).onFieldValueChanged(themeMode: modes.first),
             ),
           ],
         ),
         const SizedBox(height:24),
         TextFormField(
-          controller: ref.watch(vm.notifier).apiKeyController,
+          initialValue: ref.watch(vm).openAiApiKey,
+          onChanged: (str) => ref.read(vm.notifier).onFieldValueChanged(openAiApiKey: str),
           decoration: const InputDecoration(
             label: Text("API Key"),
             border: OutlineInputBorder(),
@@ -72,9 +72,10 @@ class SettingsPage extends HookConsumerWidget{
         ),
         const SizedBox(height:24),
         TextFormField(
+          initialValue: ref.watch(vm).gptTempleture.toString(),
+          onChanged: (str) => ref.read(vm.notifier).onFieldValueChanged(gptTempleture: double.tryParse(str)),
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
           inputFormatters: [ FilteringTextInputFormatter.allow(RegExp('^\$|^(0|([1-9][0-9]{0,}))(\\.[0-9]{0,})?\$')) ],
-          controller: ref.watch(vm.notifier).templetureController,
           decoration: const InputDecoration(
             label: Text("Templeture"),
             border: OutlineInputBorder(),
@@ -82,9 +83,10 @@ class SettingsPage extends HookConsumerWidget{
         ),
         const SizedBox(height:24),
         TextFormField(
+          initialValue: ref.watch(vm).maxTokens.toString(),
+          onChanged: (str) => ref.read(vm.notifier).onFieldValueChanged(maxTokens: int.tryParse(str)),
           keyboardType: const TextInputType.numberWithOptions(),
           inputFormatters: [ FilteringTextInputFormatter.digitsOnly ],
-          controller: ref.watch(vm.notifier).maxTokensController,
           decoration: const InputDecoration(
             label: Text("Max Tokens"),
             border: OutlineInputBorder(),
@@ -92,9 +94,10 @@ class SettingsPage extends HookConsumerWidget{
         ),
         const SizedBox(height:24),
         TextFormField(
+          initialValue: ref.watch(vm).systemMessage,
+          onChanged: (str) => ref.read(vm.notifier).onFieldValueChanged(systemMessage: str),
           minLines: 10,
           maxLines: null,
-          controller: ref.watch(vm.notifier).sysRoleMsgController,
           decoration: const InputDecoration(
             label: Text("System Role Message"),
             border: OutlineInputBorder(),

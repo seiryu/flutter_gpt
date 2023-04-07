@@ -30,13 +30,21 @@ class MyApp extends HookConsumerWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       themeMode: ref.watch(sharedPrefsRepo).themeMode,
+      // theme: ThemeData(
+      //   useMaterial3: true,
+      //   colorScheme: lightColorScheme
+      // ),
+      // darkTheme: ThemeData(
+      //   useMaterial3: true,
+      //   colorScheme: darkColorScheme,
+      // ),
       theme: ThemeData(
         useMaterial3: true,
-        colorScheme: lightColorScheme
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange)
       ),
       darkTheme: ThemeData(
         useMaterial3: true,
-        colorScheme: darkColorScheme,
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange,brightness: Brightness.dark),
       ),
       debugShowCheckedModeBanner: false,
       // home: const ChatPage(),
