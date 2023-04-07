@@ -40,11 +40,11 @@ class MyApp extends HookConsumerWidget {
       // ),
       theme: ThemeData(
         useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange)
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.greenAccent)
       ),
       darkTheme: ThemeData(
         useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange,brightness: Brightness.dark),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.greenAccent,brightness: Brightness.dark),
       ),
       debugShowCheckedModeBanner: false,
       // home: const ChatPage(),
