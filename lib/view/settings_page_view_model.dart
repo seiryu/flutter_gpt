@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -32,9 +34,9 @@ class SettingsPageViewModel extends StateNotifier<SettingsPageState>{
       themeMode: state.themeMode,
       // openAiApiKey: apiKeyController.text, 
       openAiApiKey: state.openAiApiKey, 
-      systemMessage: sysRoleMsgController.text,
-      gptTempleture: double.tryParse(templetureController.text),
-      maxTokens: int.tryParse(maxTokensController.text),
+      systemMessage: state.systemMessage,
+      gptTempleture: state.gptTempleture,
+      maxTokens: state.maxTokens,
     );
   }
 
